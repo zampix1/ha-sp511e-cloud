@@ -1,4 +1,4 @@
-"""FairyNest cloud API client for SP511E controllers.
+"""Vendor cloud API client for SP511E controllers.
 
 This module intentionally contains no Home Assistant imports so the protocol
 helpers can be tested outside HA. Network methods are synchronous and must run
@@ -19,9 +19,9 @@ from typing import Any
 
 API_BASE = "https://fairyhome.ledhue.com/smarthome/v1/"
 STD_B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-FAIRYNEST_B64 = "1sC2EFbHvJyLgNdPzkiTpV7XtZaG+MefOhSjRlmnoUqrBYuIwxKQ0AD3/96W85c4"
-ENCODE_TRANS = str.maketrans(STD_B64, FAIRYNEST_B64)
-DECODE_TRANS = str.maketrans(FAIRYNEST_B64, STD_B64)
+VENDOR_B64 = "1sC2EFbHvJyLgNdPzkiTpV7XtZaG+MefOhSjRlmnoUqrBYuIwxKQ0AD3/96W85c4"
+ENCODE_TRANS = str.maketrans(STD_B64, VENDOR_B64)
+DECODE_TRANS = str.maketrans(VENDOR_B64, STD_B64)
 
 EFFECTS: dict[str, dict[str, Any]] = {
     "rainbow": {"mode": 200, "sound_reactive": False},
@@ -53,17 +53,17 @@ EFFECTS: dict[str, dict[str, Any]] = {
 MODE_TO_EFFECT = {int(meta["mode"]): name for name, meta in EFFECTS.items()}
 
 
-class FairyNestError(Exception):
+class SP511ECloudError(Exception):
     """Base API error."""
 
 
-class FairyNestAuthError(FairyNestError):
+class SP511ECloudAuthError(SP511ECloudError):
     """Session is missing, expired, or rejected."""
 
 
 @dataclass(slots=True)
 class Session:
-    """Signed FairyNest session."""
+    """Signed SP511E cloud session."""
 
     sid: str
     token: str
@@ -143,7 +143,7 @@ def iter_devices(response: dict[str, Any]) -> list[dict[str, Any]]:
 
 def pick_device(devices: list[dict[str, Any]], selector: str | None) -> dict[str, Any]:
     if not devices:
-        raise FairyNestError("No FairyNest devices returned by cloud")
+        raise SP511ECloudError("No SP511E devices returned by cloud")
     if selector:
         selector_l = selector.lower()
         for device in devices:
@@ -191,7 +191,7 @@ def brightness_device_to_ha(brightness: int | None) -> int | None:
 def normalize_effect(effect: str) -> str:
     key = effect.strip().lower()
     if key not in EFFECTS:
-        raise ValueError(f"Unknown FairyNest effect: {effect}")
+        raise ValueError(f"Unknown SP511E effect: {effect}")
     return key
 
 
@@ -206,8 +206,8 @@ def response_auth_failed(response: dict[str, Any]) -> bool:
     return code in {401, 403, 1001, 1002, 2001, 4001} or "auth" in desc or "login" in desc or "token" in desc
 
 
-class FairyNestClient:
-    """Synchronous FairyNest cloud client."""
+class SP511ECloudClient:
+    """Synchronous vendor cloud client."""
 
     def __init__(self, timeout: int = 20) -> None:
         self.timeout = timeout
@@ -257,7 +257,7 @@ class FairyNestClient:
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             response = json.loads(resp.read().decode("utf-8", errors="replace"))
         if response_auth_failed(response):
-            raise FairyNestAuthError(str(response))
+            raise SP511ECloudAuthError(str(response))
         return response
 
     def login(self, account: str, password: str, country_code: str) -> Session:
@@ -275,10 +275,10 @@ class FairyNestClient:
 
         apply_response = self._get_json("sign/apply?version=20")
         if apply_response.get("code") != 200 or not isinstance(apply_response.get("payload"), dict):
-            raise FairyNestAuthError(f"sign/apply failed: {apply_response!r}")
+            raise SP511ECloudAuthError(f"sign/apply failed: {apply_response!r}")
         server_public_key_b64 = apply_response["payload"].get("pub-k") or apply_response["payload"].get("publicKey")
         if not server_public_key_b64:
-            raise FairyNestAuthError("sign/apply did not return server public key")
+            raise SP511ECloudAuthError("sign/apply did not return server public key")
         server_public_key = serialization.load_der_public_key(base64.b64decode(server_public_key_b64))
 
         def encrypt_to_b64(text: str) -> str:
@@ -295,7 +295,7 @@ class FairyNestClient:
             },
         )
         if sign_in_response.get("code") != 200 or not isinstance(sign_in_response.get("payload"), dict):
-            raise FairyNestAuthError(f"sign/sign-in failed: {sign_in_response!r}")
+            raise SP511ECloudAuthError(f"sign/sign-in failed: {sign_in_response!r}")
         payload = sign_in_response["payload"]
 
         def decrypt_b64(value: str) -> str:
@@ -308,7 +308,7 @@ class FairyNestClient:
         sid = str(payload.get("sid", "")).strip()
         token_cipher = payload.get("token")
         if not sid or not token_cipher:
-            raise FairyNestAuthError("login response did not contain sid/token")
+            raise SP511ECloudAuthError("login response did not contain sid/token")
         # Keep a small cryptography reference used by some HA frozen builds.
         hashes.SHA256()
         return Session(sid=sid, token=decrypt_b64(str(token_cipher)))
@@ -316,7 +316,7 @@ class FairyNestClient:
     def get_devices(self, session: Session) -> list[dict[str, Any]]:
         response = self.post_signed_form("user/info", session, user_info_fields())
         if response.get("code") != 200:
-            raise FairyNestError(f"user/info failed: {response!r}")
+            raise SP511ECloudError(f"user/info failed: {response!r}")
         return iter_devices(response)
 
     def get_snapshot(
@@ -344,6 +344,5 @@ class FairyNestClient:
         }
         response = self.post_signed_form("user/device/control", session, fields)
         if response.get("code") != 200:
-            raise FairyNestError(f"control failed: {response!r}")
+            raise SP511ECloudError(f"control failed: {response!r}")
         return response
-

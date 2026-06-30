@@ -1,8 +1,8 @@
-"""Constants for the FairyNest SP511E integration."""
+"""Constants for the SP511E integration."""
 
 from __future__ import annotations
 
-DOMAIN = "fairynest_sp511e"
+DOMAIN = "sp511e_cloud"
 
 CONF_ACCOUNT = "account"
 CONF_PASSWORD = "password"

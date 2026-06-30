@@ -1,4 +1,4 @@
-"""Config flow for FairyNest SP511E."""
+"""Config flow for SP511E."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 
-from .api import FairyNestAuthError, FairyNestClient, pick_device
+from .api import SP511ECloudAuthError, SP511ECloudClient, pick_device
 from .const import (
     CONF_ACCOUNT,
     CONF_COUNTRY_CODE,
@@ -24,15 +24,15 @@ from .const import (
 )
 
 
-class FairyNestSP511EConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a FairyNest SP511E config flow."""
+class SP511ECloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a SP511E config flow."""
 
     VERSION = 1
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None):
         errors: dict[str, str] = {}
         if user_input is not None:
-            client = FairyNestClient()
+            client = SP511ECloudClient()
             try:
                 session = await self.hass.async_add_executor_job(
                     client.login,
@@ -42,7 +42,7 @@ class FairyNestSP511EConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 devices = await self.hass.async_add_executor_job(client.get_devices, session)
                 device = pick_device(devices, user_input.get(CONF_DEVICE_SELECTOR))
-            except FairyNestAuthError:
+            except SP511ECloudAuthError:
                 errors["base"] = "invalid_auth"
             except Exception:  # noqa: BLE001 - config flow maps unknown cloud failures to cannot_connect.
                 errors["base"] = "cannot_connect"
@@ -51,7 +51,7 @@ class FairyNestSP511EConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 unique_id = hashlib.sha256(raw_unique.encode("utf-8")).hexdigest()[:16]
                 await self.async_set_unique_id(unique_id)
                 self._abort_if_unique_id_configured()
-                title = str(device.get("name") or "FairyNest SP511E")
+                title = str(device.get("name") or "SP511E")
                 data = dict(user_input)
                 data[CONF_SESSION_SID] = session.sid
                 data[CONF_SESSION_TOKEN] = session.token
@@ -73,10 +73,10 @@ class FairyNestSP511EConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        return FairyNestOptionsFlow(config_entry)
+        return SP511EOptionsFlow(config_entry)
 
 
-class FairyNestOptionsFlow(config_entries.OptionsFlow):
+class SP511EOptionsFlow(config_entries.OptionsFlow):
     """Options flow."""
 
     def __init__(self, config_entry) -> None:
@@ -96,4 +96,3 @@ class FairyNestOptionsFlow(config_entries.OptionsFlow):
                 }
             ),
         )
-

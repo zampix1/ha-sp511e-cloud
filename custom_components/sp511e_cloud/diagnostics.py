@@ -1,4 +1,4 @@
-"""Diagnostics support for FairyNest SP511E."""
+"""Diagnostics support for SP511E."""
 
 from __future__ import annotations
 

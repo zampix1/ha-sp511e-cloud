@@ -1,4 +1,4 @@
-"""Coordinator for FairyNest SP511E."""
+"""Coordinator for SP511E."""
 
 from __future__ import annotations
 
@@ -12,8 +12,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import (
-    FairyNestAuthError,
-    FairyNestClient,
+    SP511ECloudAuthError,
+    SP511ECloudClient,
     Session,
     command_for_effect,
     rgb_to_int,
@@ -32,10 +32,10 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class FairyNestCoordinator(DataUpdateCoordinator[dict[str, Any]]):
+class SP511ECoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Fetches state and serializes writes."""
 
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, client: FairyNestClient) -> None:
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, client: SP511ECloudClient) -> None:
         super().__init__(
             hass,
             _LOGGER,
@@ -77,7 +77,7 @@ class FairyNestCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 self.selector,
                 self.state,
             )
-        except FairyNestAuthError:
+        except SP511ECloudAuthError:
             await self.async_refresh_session()
             snapshot = await self.hass.async_add_executor_job(
                 self.client.get_snapshot,
@@ -94,7 +94,7 @@ class FairyNestCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def async_refresh_session(self) -> None:
         if not self.account or not self.password:
-            raise FairyNestAuthError("Missing account/password for session refresh")
+            raise SP511ECloudAuthError("Missing account/password for session refresh")
         session = await self.hass.async_add_executor_job(
             self.client.login,
             self.account,
@@ -112,7 +112,7 @@ class FairyNestCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             await self.async_request_refresh()
             hash_key = self.device.get("hashKey")
             if not isinstance(hash_key, str) or not hash_key:
-                raise UpdateFailed("Selected FairyNest device does not expose hashKey")
+                raise UpdateFailed("Selected SP511E device does not expose hashKey")
             pre_state = dict(self.state)
             try:
                 response = await self.hass.async_add_executor_job(
@@ -122,7 +122,7 @@ class FairyNestCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     name,
                     value,
                 )
-            except FairyNestAuthError:
+            except SP511ECloudAuthError:
                 await self.async_refresh_session()
                 response = await self.hass.async_add_executor_job(
                     self.client.send_command,

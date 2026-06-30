@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SP511E Cloud",
+        "description": "Connect to the cloud account that owns the SP511E controller.",
+        "data": {
+          "account": "Account email",
+          "password": "Password",
+          "country_code": "Country code",
+          "device_selector": "Device selector"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the vendor cloud.",
+      "invalid_auth": "Invalid cloud credentials."
+    },
+    "abort": {
+      "already_configured": "This SP511E device is already configured."
+    }
+  }
+}

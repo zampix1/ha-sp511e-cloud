@@ -1,4 +1,4 @@
-"""Number platform for FairyNest SP511E."""
+"""Number platform for SP511E."""
 
 from __future__ import annotations
 
@@ -12,31 +12,31 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import FairyNestCoordinator
+from .coordinator import SP511ECoordinator
 
 PERCENT = "%"
 
 
 @dataclass(frozen=True, kw_only=True)
-class FairyNestNumberDescription(NumberEntityDescription):
+class SP511ENumberDescription(NumberEntityDescription):
     state_key: str
-    setter: Callable[[FairyNestCoordinator, int], Awaitable[None]]
+    setter: Callable[[SP511ECoordinator, int], Awaitable[None]]
 
 
-async def _set_brightness(coordinator: FairyNestCoordinator, value: int) -> None:
+async def _set_brightness(coordinator: SP511ECoordinator, value: int) -> None:
     await coordinator.async_brightness(value, "number_brightness")
 
 
-async def _set_speed(coordinator: FairyNestCoordinator, value: int) -> None:
+async def _set_speed(coordinator: SP511ECoordinator, value: int) -> None:
     await coordinator.async_speed(value, "number_speed")
 
 
-async def _set_music_sensitivity(coordinator: FairyNestCoordinator, value: int) -> None:
+async def _set_music_sensitivity(coordinator: SP511ECoordinator, value: int) -> None:
     await coordinator.async_music_sensitivity(value, "number_music_sensitivity")
 
 
-NUMBERS: tuple[FairyNestNumberDescription, ...] = (
-    FairyNestNumberDescription(
+NUMBERS: tuple[SP511ENumberDescription, ...] = (
+    SP511ENumberDescription(
         key="brightness",
         name="Brightness",
         state_key="bn",
@@ -47,7 +47,7 @@ NUMBERS: tuple[FairyNestNumberDescription, ...] = (
         mode=NumberMode.SLIDER,
         setter=_set_brightness,
     ),
-    FairyNestNumberDescription(
+    SP511ENumberDescription(
         key="speed",
         name="Speed",
         state_key="s",
@@ -58,7 +58,7 @@ NUMBERS: tuple[FairyNestNumberDescription, ...] = (
         mode=NumberMode.SLIDER,
         setter=_set_speed,
     ),
-    FairyNestNumberDescription(
+    SP511ENumberDescription(
         key="music_sensitivity",
         name="Music Sensitivity",
         state_key="ms",
@@ -73,20 +73,20 @@ NUMBERS: tuple[FairyNestNumberDescription, ...] = (
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
-    coordinator: FairyNestCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([FairyNestNumber(coordinator, entry, description) for description in NUMBERS])
+    coordinator: SP511ECoordinator = hass.data[DOMAIN][entry.entry_id]
+    async_add_entities([SP511ENumber(coordinator, entry, description) for description in NUMBERS])
 
 
-class FairyNestNumber(CoordinatorEntity[FairyNestCoordinator], NumberEntity):
-    """Numeric control for FairyNest SP511E."""
+class SP511ENumber(CoordinatorEntity[SP511ECoordinator], NumberEntity):
+    """Numeric control for SP511E."""
 
     _attr_has_entity_name = True
 
     def __init__(
         self,
-        coordinator: FairyNestCoordinator,
+        coordinator: SP511ECoordinator,
         entry: ConfigEntry,
-        description: FairyNestNumberDescription,
+        description: SP511ENumberDescription,
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
@@ -94,7 +94,7 @@ class FairyNestNumber(CoordinatorEntity[FairyNestCoordinator], NumberEntity):
         self._attr_device_info = {
             "identifiers": {(DOMAIN, entry.entry_id)},
             "name": entry.title,
-            "manufacturer": "FairyNest",
+            "manufacturer": "SP511E",
             "model": "SP511E",
         }
 

@@ -1,4 +1,4 @@
-"""FairyNest SP511E custom integration."""
+"""SP511E custom integration."""
 
 from __future__ import annotations
 
@@ -11,15 +11,15 @@ from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 
-from .api import EFFECTS, FairyNestClient
+from .api import EFFECTS, SP511ECloudClient
 from .const import DOMAIN, PLATFORMS
-from .coordinator import FairyNestCoordinator
+from .coordinator import SP511ECoordinator
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up a FairyNest SP511E config entry."""
+    """Set up a SP511E config entry."""
     hass.data.setdefault(DOMAIN, {})
-    coordinator = FairyNestCoordinator(hass, entry, FairyNestClient())
+    coordinator = SP511ECoordinator(hass, entry, SP511ECloudClient())
     await coordinator.async_config_entry_first_refresh()
     hass.data[DOMAIN][entry.entry_id] = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -28,23 +28,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Unload a FairyNest SP511E config entry."""
+    """Unload a SP511E config entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id, None)
     return unload_ok
 
 
-def _coordinator_from_call(hass: HomeAssistant, call: ServiceCall) -> FairyNestCoordinator:
+def _coordinator_from_call(hass: HomeAssistant, call: ServiceCall) -> SP511ECoordinator:
     entry_id = call.data.get("entry_id")
-    coordinators = {key: value for key, value in hass.data.get(DOMAIN, {}).items() if isinstance(value, FairyNestCoordinator)}
+    coordinators = {key: value for key, value in hass.data.get(DOMAIN, {}).items() if isinstance(value, SP511ECoordinator)}
     if entry_id:
         try:
             return coordinators[str(entry_id)]
         except KeyError as exc:
-            raise HomeAssistantError(f"Unknown FairyNest entry_id: {entry_id}") from exc
+            raise HomeAssistantError(f"Unknown SP511E entry_id: {entry_id}") from exc
     if len(coordinators) != 1:
-        raise HomeAssistantError("Pass entry_id when more than one FairyNest SP511E device is configured")
+        raise HomeAssistantError("Pass entry_id when more than one SP511E device is configured")
     return next(iter(coordinators.values()))
 
 

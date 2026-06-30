@@ -4,15 +4,15 @@ import sys
 import unittest
 
 
-API_PATH = pathlib.Path(__file__).resolve().parents[1] / "custom_components" / "fairynest_sp511e" / "api.py"
-SPEC = importlib.util.spec_from_file_location("fairynest_component_api", API_PATH)
+API_PATH = pathlib.Path(__file__).resolve().parents[1] / "custom_components" / "sp511e_cloud" / "api.py"
+SPEC = importlib.util.spec_from_file_location("sp511e_cloud_api", API_PATH)
 api = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
 sys.modules[SPEC.name] = api
 SPEC.loader.exec_module(api)
 
 
-class FairyNestComponentApiTests(unittest.TestCase):
+class SP511ECloudApiTests(unittest.TestCase):
     def test_obfuscation_matches_existing_cloud_client_vector(self):
         value = "deadbeefdeadbeefdeadbeefdeadbeef"
 

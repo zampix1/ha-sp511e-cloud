@@ -1,8 +1,8 @@
-# FairyNest SP511E Cloud
+# SP511E Cloud
 
-Home Assistant custom integration for FairyNest SP511E LED strip controllers.
+Home Assistant custom integration for SP511E LED strip controllers.
 
-This integration is cloud dependent. It talks to the FairyNest cloud API and does not provide a local-only replacement for the controller firmware or Aliyun IoT channel.
+This integration is cloud dependent. It talks to the vendor cloud API used by the official app and does not provide a local-only replacement for the controller firmware or Aliyun IoT channel.
 
 ![SP511E LED strip controller kit](assets/sp511e-controller-kit.jpg)
 
@@ -21,23 +21,23 @@ This integration is cloud dependent. It talks to the FairyNest cloud API and doe
 
 Tested with:
 
-- FairyNest Android app package `com.spled.aicontrol`
+- Official Android app package `com.spled.aicontrol`
 - SP511E controller
 - SP511E LED controller kit as shown above
 - Firmware `1.0.2`
 
-Other FairyNest/Spled controllers may use similar cloud commands, but they are not supported by this integration unless explicitly tested.
+Other Spled/SP511E-family controllers may use similar cloud commands, but they are not supported by this integration unless explicitly tested.
 
 ## Quick start
 
-Before installing this integration, the controller must already work in the official FairyNest app and must be bound to the FairyNest account you will use in Home Assistant.
+Before installing this integration, the controller must already work in the official app and must be bound to the cloud account you will use in Home Assistant.
 
 Requirements:
 
 - Home Assistant with HACS installed, or filesystem access to `/config/custom_components`.
-- Internet access from Home Assistant to the FairyNest cloud API.
+- Internet access from Home Assistant to the vendor cloud API.
 - Internet access from the SP511E controller to the vendor cloud.
-- FairyNest account email/phone, password, and country code used by the official app.
+- Cloud account email/phone, password, and country code used by the official app.
 
 Setup:
 
@@ -45,9 +45,9 @@ Setup:
 2. Restart Home Assistant.
 3. Open `Settings > Devices & services`.
 4. Select `Add integration`.
-5. Search for `FairyNest SP511E Cloud`.
-6. Enter the same account, password, and country code used in the FairyNest app.
-7. Leave `Device selector` as `SP511E` unless you have multiple FairyNest devices on the same account.
+5. Search for `SP511E Cloud`.
+6. Enter the same account, password, and country code used in the official app.
+7. Leave `Device selector` as `SP511E` unless you have multiple SP511E devices on the same account.
 8. Confirm the new `light`, `select`, `number`, `button`, and diagnostic `sensor` entities are created.
 
 After setup, use the `light` entity for power, brightness, color, and effects. Advanced actions are also exposed as Home Assistant services.
@@ -58,7 +58,7 @@ After setup, use the `light` entity for power, brightness, color, and effects. A
 2. Open `Integrations`.
 3. Add this repository as a custom repository.
 4. Select category `Integration`.
-5. Install `FairyNest SP511E Cloud`.
+5. Install `SP511E Cloud`.
 6. Restart Home Assistant.
 7. Add the integration from `Settings > Devices & services`.
 
@@ -67,31 +67,31 @@ After setup, use the `light` entity for power, brightness, color, and effects. A
 Copy this directory:
 
 ```text
-custom_components/fairynest_sp511e
+custom_components/sp511e_cloud
 ```
 
 to:
 
 ```text
-/config/custom_components/fairynest_sp511e
+/config/custom_components/sp511e_cloud
 ```
 
-Restart Home Assistant and add `FairyNest SP511E Cloud` from the integrations UI.
+Restart Home Assistant and add `SP511E Cloud` from the integrations UI.
 
 ## Credentials
 
-The integration needs the FairyNest account that owns the controller. Home Assistant stores the account credentials and refreshed session token in the config entry storage.
+The integration needs the cloud account that owns the controller. Home Assistant stores the account credentials and refreshed session token in the config entry storage.
 
 Do not publish `.storage`, diagnostic dumps, logs, tokens, or pulled app data.
 
 ## Services
 
-- `fairynest_sp511e.set_effect`
-- `fairynest_sp511e.set_speed`
-- `fairynest_sp511e.set_music_sensitivity`
-- `fairynest_sp511e.restore_standard`
-- `fairynest_sp511e.all_off`
-- `fairynest_sp511e.refresh`
+- `sp511e_cloud.set_effect`
+- `sp511e_cloud.set_speed`
+- `sp511e_cloud.set_music_sensitivity`
+- `sp511e_cloud.restore_standard`
+- `sp511e_cloud.all_off`
+- `sp511e_cloud.refresh`
 
 ## Effects
 
@@ -112,9 +112,9 @@ The screenshots below come from the validation Home Assistant dashboard used whi
 ## Known limitations
 
 - Cloud dependent: no local-only runtime has been confirmed.
-- If FairyNest changes API signing, login, or command routing, the integration may need updates.
+- If the vendor changes API signing, login, or command routing, the integration may need updates.
 - Only SP511E has been validated.
-- This is an unofficial integration and is not affiliated with FairyNest, Spled, Sperll, or the device vendor.
+- This is an unofficial integration and is not affiliated with the official app publisher, Spled, Sperll, or the device vendor.
 
 ## Privacy
 

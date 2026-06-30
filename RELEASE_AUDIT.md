@@ -2,14 +2,14 @@
 
 ## Repository Candidate
 
-- Intended repository: `zampix1/hass-fairynest-sp511e-cloud`
-- Domain: `fairynest_sp511e`
+- Intended repository: `zampix1/ha-sp511e-cloud`
+- Domain: `sp511e_cloud`
 - Publication status: prepared as a HACS custom repository candidate.
 - Current recommendation: publishable as a public HACS custom repository candidate after testing install from the real GitHub repository.
 
 ## Public Positioning
 
-Home Assistant custom integration for FairyNest SP511E LED strip controllers.
+Home Assistant custom integration for SP511E LED strip controllers.
 
 This is a cloud-dependent integration. It is not local-only and does not emulate the controller's Aliyun IoT channel.
 
@@ -17,15 +17,15 @@ This is a cloud-dependent integration. It is not local-only and does not emulate
 
 - Root metadata: `README.md`, `hacs.json`, `LICENSE`, `CHANGELOG.md`, `SECURITY.md`, `CONTRIBUTING.md`, `PUBLISHING.md`.
 - Workflows: `.github/workflows/hacs.yml`, `.github/workflows/hassfest.yml`, `.github/workflows/tests.yml`.
-- Component: `custom_components/fairynest_sp511e`.
+- Component: `custom_components/sp511e_cloud`.
 - Assets: controller photo, integration icon/logo, redacted dashboard screenshots.
-- Tests: `tests/test_fairynest_component_api.py`.
+- Tests: `tests/test_sp511e_cloud_api.py`.
 
 ## Architecture
 
-- Config flow logs in to the FairyNest cloud.
+- Config flow logs in to the vendor cloud used by the official app.
 - Session SID/token are stored in Home Assistant config entry data and refreshed when authentication expires.
-- Polling reads state from FairyNest `user/info`.
+- Polling reads state from the cloud `user/info` endpoint.
 - Writes use mapped `SPLED.*` commands through `user/device/control`.
 - No raw payload write service is exposed.
 
@@ -35,8 +35,8 @@ This is a cloud-dependent integration. It is not local-only and does not emulate
 - `config_flow`: `true`
 - `integration_type`: `device`
 - `codeowners`: `@zampix1`
-- `documentation`: `https://github.com/zampix1/hass-fairynest-sp511e-cloud`
-- `issue_tracker`: `https://github.com/zampix1/hass-fairynest-sp511e-cloud/issues`
+- `documentation`: `https://github.com/zampix1/ha-sp511e-cloud`
+- `issue_tracker`: `https://github.com/zampix1/ha-sp511e-cloud/issues`
 
 ## Privacy Risks
 

@@ -2,7 +2,7 @@
 
 Before pushing this repository publicly:
 
-1. Confirm repository metadata points to `https://github.com/zampix1/hass-fairynest-sp511e-cloud`.
+1. Confirm repository metadata points to `https://github.com/zampix1/ha-sp511e-cloud`.
 2. Create or update the GitHub repository, then push this folder as the repository root.
 3. Confirm GitHub Actions pass:
    - HACS validation

@@ -1,4 +1,4 @@
-"""Select platform for FairyNest SP511E."""
+"""Select platform for SP511E."""
 
 from __future__ import annotations
 
@@ -10,28 +10,28 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .api import EFFECTS, MODE_TO_EFFECT
 from .const import DOMAIN
-from .coordinator import FairyNestCoordinator
+from .coordinator import SP511ECoordinator
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
-    coordinator: FairyNestCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([FairyNestEffectSelect(coordinator, entry)])
+    coordinator: SP511ECoordinator = hass.data[DOMAIN][entry.entry_id]
+    async_add_entities([SP511EEffectSelect(coordinator, entry)])
 
 
-class FairyNestEffectSelect(CoordinatorEntity[FairyNestCoordinator], SelectEntity):
-    """Effect selector for FairyNest SP511E."""
+class SP511EEffectSelect(CoordinatorEntity[SP511ECoordinator], SelectEntity):
+    """Effect selector for SP511E."""
 
     _attr_has_entity_name = True
     _attr_name = "Effect"
     _attr_options = [name.title() for name in EFFECTS]
 
-    def __init__(self, coordinator: FairyNestCoordinator, entry: ConfigEntry) -> None:
+    def __init__(self, coordinator: SP511ECoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator)
         self._attr_unique_id = f"{entry.entry_id}_effect_select"
         self._attr_device_info = {
             "identifiers": {(DOMAIN, entry.entry_id)},
             "name": entry.title,
-            "manufacturer": "FairyNest",
+            "manufacturer": "SP511E",
             "model": "SP511E",
         }
 

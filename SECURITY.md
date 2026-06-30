@@ -1,6 +1,6 @@
 # Security
 
-Please do not open public issues containing FairyNest account credentials, session tokens, device identifiers, `hashKey`, product keys, LAN IP addresses, Home Assistant `.storage` files, diagnostic dumps, or screenshots with private details.
+Please do not open public issues containing cloud account credentials, session tokens, device identifiers, `hashKey`, product keys, LAN IP addresses, Home Assistant `.storage` files, diagnostic dumps, or screenshots with private details.
 
 Replace private values with placeholders before sharing logs:
 
