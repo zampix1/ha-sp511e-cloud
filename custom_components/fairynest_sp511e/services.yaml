@@ -1,0 +1,114 @@
+set_effect:
+  name: Set effect
+  description: Set one of the mapped SP511E light effects through the FairyNest cloud.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID. Required only when multiple FairyNest devices are configured.
+      required: false
+      selector:
+        text:
+    effect:
+      name: Effect
+      description: Effect name to apply.
+      required: true
+      selector:
+        select:
+          options:
+            - rainbow
+            - fire
+            - stars
+            - ripple
+            - halloween
+            - theater
+            - gradient
+            - gorgeous
+            - romantic
+            - sunshine
+            - sunset
+            - seaside
+            - grassland
+            - violet
+            - crystal
+            - energy
+            - spectrum
+            - twinkle
+            - beats
+            - scrolling
+            - rhythm
+            - blink
+            - pulse
+            - ejection
+
+set_speed:
+  name: Set speed
+  description: Set effect animation speed from 1 to 100.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID. Required only when multiple FairyNest devices are configured.
+      required: false
+      selector:
+        text:
+    speed:
+      name: Speed
+      description: Animation speed percentage.
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: slider
+
+set_music_sensitivity:
+  name: Set music sensitivity
+  description: Set sound-reactive effect sensitivity from 1 to 100.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID. Required only when multiple FairyNest devices are configured.
+      required: false
+      selector:
+        text:
+    sensitivity:
+      name: Sensitivity
+      description: Music sensitivity percentage.
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: slider
+
+restore_standard:
+  name: Restore standard
+  description: Turn the controller on and restore Rainbow, brightness 100, speed 57.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID. Required only when multiple FairyNest devices are configured.
+      required: false
+      selector:
+        text:
+
+all_off:
+  name: All off
+  description: Turn the selected SP511E controller off.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID. Required only when multiple FairyNest devices are configured.
+      required: false
+      selector:
+        text:
+
+refresh:
+  name: Refresh
+  description: Refresh device state from the FairyNest cloud.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID. Required only when multiple FairyNest devices are configured.
+      required: false
+      selector:
+        text:

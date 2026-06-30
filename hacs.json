@@ -1,0 +1,6 @@
+{
+  "name": "FairyNest SP511E Cloud",
+  "render_readme": true,
+  "domains": ["light", "select", "number", "button", "sensor"],
+  "homeassistant": "2025.1.0"
+}
