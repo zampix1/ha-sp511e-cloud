@@ -2,10 +2,10 @@
 
 ## Repository Candidate
 
-- Intended repository: `hass-fairynest-sp511e-cloud`
+- Intended repository: `zampix1/hass-fairynest-sp511e-cloud`
 - Domain: `fairynest_sp511e`
 - Publication status: prepared as a HACS custom repository candidate.
-- Current recommendation: publishable as a private/test release candidate after replacing `CHANGE_ME` metadata and testing install from a real GitHub repository.
+- Current recommendation: publishable as a public HACS custom repository candidate after testing install from the real GitHub repository.
 
 ## Public Positioning
 
@@ -34,9 +34,9 @@ This is a cloud-dependent integration. It is not local-only and does not emulate
 - `iot_class`: `cloud_polling`
 - `config_flow`: `true`
 - `integration_type`: `device`
-- `codeowners`: placeholder must be replaced.
-- `documentation`: placeholder GitHub URL must be replaced.
-- `issue_tracker`: placeholder GitHub URL must be replaced.
+- `codeowners`: `@zampix1`
+- `documentation`: `https://github.com/zampix1/hass-fairynest-sp511e-cloud`
+- `issue_tracker`: `https://github.com/zampix1/hass-fairynest-sp511e-cloud/issues`
 
 ## Privacy Risks
 
@@ -61,8 +61,6 @@ Diagnostics redact common credential and identifier keys.
 
 ## Residual Blockers Before Public Release
 
-- Replace all `CHANGE_ME` placeholders.
-- Set final copyright owner in `LICENSE`.
 - Install from the real GitHub repository through HACS as a custom repository.
 - Verify config flow and session refresh on a clean Home Assistant instance.
 - Create release `v0.1.0`.

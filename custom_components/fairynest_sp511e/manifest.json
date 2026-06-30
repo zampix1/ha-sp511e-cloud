@@ -1,11 +1,11 @@
 {
   "domain": "fairynest_sp511e",
   "name": "FairyNest SP511E Cloud",
-  "codeowners": ["@CHANGE_ME"],
+  "codeowners": ["@zampix1"],
   "config_flow": true,
-  "documentation": "https://github.com/CHANGE_ME/hass-fairynest-sp511e-cloud",
+  "documentation": "https://github.com/zampix1/hass-fairynest-sp511e-cloud",
   "integration_type": "device",
-  "issue_tracker": "https://github.com/CHANGE_ME/hass-fairynest-sp511e-cloud/issues",
+  "issue_tracker": "https://github.com/zampix1/hass-fairynest-sp511e-cloud/issues",
   "iot_class": "cloud_polling",
   "requirements": [],
   "version": "0.1.0"
