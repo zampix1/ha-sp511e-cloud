@@ -2,11 +2,13 @@
 
 Home Assistant custom integration for SP511E LED strip controllers.
 
+[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=zampix1&repository=ha-sp511e-cloud&category=integration)
+
 This integration is cloud dependent. It talks to the vendor cloud API used by the official app and does not provide a local-only replacement for the controller firmware or Aliyun IoT channel.
 
 ![SP511E LED strip controller kit](assets/sp511e-controller-kit.jpg)
 
-## Features
+## What Works
 
 - `light` entity with power, RGB color, brightness, and effect support.
 - 24 mapped SP511E effects.
@@ -16,6 +18,10 @@ This integration is cloud dependent. It talks to the vendor cloud API used by th
 - Diagnostic sensors for current effect, color, device IP, SSID, and last command.
 - Config flow login with automatic session refresh.
 - Redacted diagnostics support.
+
+## Features
+
+The integration focuses on the SP511E cloud command path exposed by the official app. It creates Home Assistant entities for everyday control and service calls for advanced actions.
 
 ## Supported devices
 
