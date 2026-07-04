@@ -3,7 +3,7 @@
 ## Repository Candidate
 
 - Intended repository: `zampix1/ha-sp511e-cloud`
-- Domain: `sp511e_cloud`
+- Domain: `fairynest_sp511e`
 - Publication status: prepared as a HACS custom repository candidate.
 - Current recommendation: publishable as a public HACS custom repository candidate after testing install from the real GitHub repository.
 
@@ -17,7 +17,7 @@ This is a cloud-dependent integration. It is not local-only and does not emulate
 
 - Root metadata: `README.md`, `hacs.json`, `LICENSE`, `CHANGELOG.md`, `SECURITY.md`, `CONTRIBUTING.md`, `PUBLISHING.md`.
 - Workflows: `.github/workflows/hacs.yml`, `.github/workflows/hassfest.yml`, `.github/workflows/tests.yml`.
-- Component: `custom_components/sp511e_cloud`.
+- Component: `custom_components/fairynest_sp511e`.
 - Assets: controller photo, integration icon/logo, redacted dashboard screenshots.
 - Tests: `tests/test_sp511e_cloud_api.py`.
 

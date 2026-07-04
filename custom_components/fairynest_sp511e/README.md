@@ -39,7 +39,7 @@ normale.
 1. Copiare questa directory in:
 
    ```text
-   /config/custom_components/sp511e_cloud
+   /config/custom_components/fairynest_sp511e
    ```
 
 2. Riavviare Home Assistant.
@@ -56,6 +56,6 @@ Durante il test lasciare attivo il vecchio package. Quando la custom integration
 ha creato entita funzionanti:
 
 1. aggiornare la dashboard verso la nuova `light.*`;
-2. sostituire gli script YAML con servizi `sp511e_cloud.*`;
-3. rinominare o disabilitare `/config/packages/sp511e_cloud_sala_pranzo.yaml`;
+2. sostituire gli script YAML con servizi `fairynest_sp511e.*`;
+3. rinominare o disabilitare `/config/packages/fairynest_sp511e_sala_pranzo.yaml`;
 4. riavviare HA e verificare che non restino entita duplicate necessarie.

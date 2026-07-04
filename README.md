@@ -73,13 +73,13 @@ After setup, use the `light` entity for power, brightness, color, and effects. A
 Copy this directory:
 
 ```text
-custom_components/sp511e_cloud
+custom_components/fairynest_sp511e
 ```
 
 to:
 
 ```text
-/config/custom_components/sp511e_cloud
+/config/custom_components/fairynest_sp511e
 ```
 
 Restart Home Assistant and add `SP511E Cloud` from the integrations UI.
@@ -92,12 +92,23 @@ Do not publish `.storage`, diagnostic dumps, logs, tokens, or pulled app data.
 
 ## Services
 
+- `fairynest_sp511e.set_effect`
+- `fairynest_sp511e.set_speed`
+- `fairynest_sp511e.set_music_sensitivity`
+- `fairynest_sp511e.restore_standard`
+- `fairynest_sp511e.all_off`
+- `fairynest_sp511e.refresh`
+
+Temporary aliases are also registered for users who installed version `0.1.0`:
+
 - `sp511e_cloud.set_effect`
 - `sp511e_cloud.set_speed`
 - `sp511e_cloud.set_music_sensitivity`
 - `sp511e_cloud.restore_standard`
 - `sp511e_cloud.all_off`
 - `sp511e_cloud.refresh`
+
+The Home Assistant technical domain is intentionally `fairynest_sp511e` to keep existing config entries and dashboards working. The public integration name remains `SP511E Cloud`.
 
 ## Effects
 

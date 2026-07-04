@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-DOMAIN = "sp511e_cloud"
+DOMAIN = "fairynest_sp511e"
 
 CONF_ACCOUNT = "account"
 CONF_PASSWORD = "password"
