@@ -12,6 +12,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import (
+    SP511ECloudError,
     SP511ECloudAuthError,
     SP511ECloudClient,
     Session,
@@ -112,41 +113,65 @@ class SP511ECoordinator(DataUpdateCoordinator[dict[str, Any]]):
             await self.async_request_refresh()
             hash_key = self.device.get("hashKey")
             if not isinstance(hash_key, str) or not hash_key:
-                raise UpdateFailed("Selected SP511E device does not expose hashKey")
+                self._record_command_result(
+                    name,
+                    value,
+                    reason,
+                    pre_state=dict(self.state),
+                    success=False,
+                    response={"code": None, "desc": "selected device does not expose hashKey"},
+                )
+                return
             pre_state = dict(self.state)
             try:
-                response = await self.hass.async_add_executor_job(
-                    self.client.send_command,
-                    self.session,
-                    hash_key,
-                    name,
-                    value,
-                )
+                response = await self._async_send_once(hash_key, name, value)
             except SP511ECloudAuthError:
-                await self.async_refresh_session()
-                response = await self.hass.async_add_executor_job(
-                    self.client.send_command,
-                    self.session,
-                    hash_key,
+                try:
+                    await self.async_refresh_session()
+                    response = await self._async_send_once(hash_key, name, value)
+                except SP511ECloudError as exc:
+                    self._record_command_result(
+                        name,
+                        value,
+                        reason,
+                        pre_state=pre_state,
+                        success=False,
+                        response={"code": None, "desc": str(exc)},
+                    )
+                    return
+            except SP511ECloudError as exc:
+                self._record_command_result(
                     name,
                     value,
+                    reason,
+                    pre_state=pre_state,
+                    success=False,
+                    response={"code": None, "desc": str(exc)},
                 )
-            self._apply_optimistic_state(name, value)
-            self.last_command_result = {
-                "source": "homeassistant",
-                "reason": reason,
-                "command_name": name,
-                "value": value,
-                "success": response.get("code") == 200,
-                "response": {"code": response.get("code"), "desc": response.get("desc")},
-                "pre_state": pre_state,
-                "post_state": dict(self.state),
-            }
-            self.hass.bus.async_fire(f"{DOMAIN}_command", self.last_command_result)
-            self.async_set_updated_data({"device": self.device, "state": self.state, "last_command": self.last_command_result})
+                return
+            success = response.get("code") == 200
+            if success:
+                self._apply_optimistic_state(name, value)
+            self._record_command_result(
+                name,
+                value,
+                reason,
+                pre_state=pre_state,
+                success=success,
+                response={"code": response.get("code"), "desc": response.get("desc")},
+            )
 
     async def async_power(self, power: bool, reason: str = "power") -> None:
         await self.async_send("SPLED.Power", 1 if power else 0, reason)
+
+    async def _async_send_once(self, hash_key: str, name: str, value: Any) -> dict[str, Any]:
+        return await self.hass.async_add_executor_job(
+            self.client.send_command,
+            self.session,
+            hash_key,
+            name,
+            value,
+        )
 
     async def async_brightness(self, brightness: int, reason: str = "brightness") -> None:
         await self.async_send("SPLED.SetBrightness", max(1, min(100, int(brightness))), reason)
@@ -183,3 +208,28 @@ class SP511ECoordinator(DataUpdateCoordinator[dict[str, Any]]):
             self.state["c"] = int(value)
         elif name == "SPLED.Mode":
             self.state["m"] = int(value)
+
+    def _record_command_result(
+        self,
+        name: str,
+        value: Any,
+        reason: str,
+        *,
+        pre_state: dict[str, Any],
+        success: bool,
+        response: dict[str, Any],
+    ) -> None:
+        self.last_command_result = {
+            "source": "homeassistant",
+            "reason": reason,
+            "command_name": name,
+            "value": value,
+            "success": success,
+            "response": response,
+            "pre_state": pre_state,
+            "post_state": dict(self.state),
+        }
+        self.hass.bus.async_fire(f"{DOMAIN}_command", self.last_command_result)
+        self.async_set_updated_data(
+            {"device": self.device, "state": self.state, "last_command": self.last_command_result}
+        )

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import logging
+
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ENTRY_ID
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError
 
@@ -13,7 +14,16 @@ from .api import EFFECTS, SP511ECloudClient
 from .const import DOMAIN, PLATFORMS
 from .coordinator import SP511ECoordinator
 
-LEGACY_SERVICE_DOMAIN = "sp511e_cloud"
+CONF_ENTRY_ID = "entry_id"
+_LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Set up global SP511E Cloud services."""
+
+    hass.data.setdefault(DOMAIN, {})
+    await _async_register_services(hass)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -21,10 +31,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})
     coordinator = SP511ECoordinator(hass, entry, SP511ECloudClient())
-    await coordinator.async_config_entry_first_refresh()
     hass.data[DOMAIN][entry.entry_id] = coordinator
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    coordinator.async_set_updated_data(
+        {
+            "device": coordinator.device,
+            "state": coordinator.state,
+            "last_command": coordinator.last_command_result,
+        }
+    )
     await _async_register_services(hass)
+    try:
+        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    except Exception:  # noqa: BLE001 - keep command services available if an entity platform fails.
+        _LOGGER.exception("Failed to set up SP511E entity platforms; command services remain available")
+    hass.async_create_task(coordinator.async_refresh())
     return True
 
 
@@ -95,9 +115,8 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         ("all_off", all_off, entry_schema),
         ("refresh", refresh, entry_schema),
     )
-    for service_domain in (DOMAIN, LEGACY_SERVICE_DOMAIN):
-        for name, handler, schema in services:
-            if not hass.services.has_service(service_domain, name):
-                hass.services.async_register(service_domain, name, handler, schema=schema)
+    for name, handler, schema in services:
+        if not hass.services.has_service(DOMAIN, name):
+            hass.services.async_register(DOMAIN, name, handler, schema=schema)
 
     hass.data[DOMAIN]["_services_registered"] = True

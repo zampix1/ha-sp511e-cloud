@@ -40,6 +40,19 @@ class SP511ECloudApiTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             api.command_for_effect("unknown")
 
+    def test_send_command_returns_vendor_failure_response(self):
+        class Client(api.SP511ECloudClient):
+            def post_signed_form(self, path, session, fields):
+                self.request = {"path": path, "fields": fields}
+                return {"code": 407, "desc": "device is offline", "payload": None}
+
+        client = Client()
+        response = client.send_command(api.Session("sid", "token"), "deadbeefdeadbeefdeadbeefdeadbeef", "SPLED.Mode", 201)
+
+        self.assertEqual(response["code"], 407)
+        self.assertEqual(response["desc"], "device is offline")
+        self.assertEqual(client.request["path"], "user/device/control")
+
 
 if __name__ == "__main__":
     unittest.main()

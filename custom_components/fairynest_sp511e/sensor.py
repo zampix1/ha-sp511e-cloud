@@ -68,6 +68,16 @@ SENSORS: tuple[SP511ESensorDescription, ...] = (
         value_fn=lambda c: c.device.get("ssid"),
     ),
     SP511ESensorDescription(
+        key="connectivity",
+        name="Connectivity",
+        value_fn=lambda c: c.device.get("connectivity"),
+    ),
+    SP511ESensorDescription(
+        key="cloud_state",
+        name="Cloud State",
+        value_fn=lambda c: c.device.get("state"),
+    ),
+    SP511ESensorDescription(
         key="last_command",
         name="Last Command",
         value_fn=lambda c: c.last_command_result.get("command_name") or "none",

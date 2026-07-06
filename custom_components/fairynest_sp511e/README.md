@@ -23,16 +23,18 @@ normale.
   - Music Sensitivity
   - Device IP
   - SSID
+  - Connectivity
+  - Cloud State
   - Last Command
 
 ## Servizi
 
-- `sp511e_cloud.set_effect`
-- `sp511e_cloud.set_speed`
-- `sp511e_cloud.set_music_sensitivity`
-- `sp511e_cloud.restore_standard`
-- `sp511e_cloud.all_off`
-- `sp511e_cloud.refresh`
+- `fairynest_sp511e.set_effect`
+- `fairynest_sp511e.set_speed`
+- `fairynest_sp511e.set_music_sensitivity`
+- `fairynest_sp511e.restore_standard`
+- `fairynest_sp511e.all_off`
+- `fairynest_sp511e.refresh`
 
 ## Setup
 
@@ -49,6 +51,10 @@ normale.
 
 Le credenziali vengono salvate da Home Assistant nel config entry storage,
 non nei file del componente. Non committare mai `.storage` o dump di sessione.
+
+Se la cloud restituisce `407 device is offline`, il comando viene registrato in
+`sensor.* Last Command` con `success: false` e lo stato ottimistico non viene
+applicato.
 
 ## Migrazione dal package YAML
 

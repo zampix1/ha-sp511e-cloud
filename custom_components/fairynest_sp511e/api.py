@@ -342,7 +342,4 @@ class SP511ECloudClient:
             "hashKey": obfuscate(hash_key),
             "message": build_message(name, value),
         }
-        response = self.post_signed_form("user/device/control", session, fields)
-        if response.get("code") != 200:
-            raise SP511ECloudError(f"control failed: {response!r}")
-        return response
+        return self.post_signed_form("user/device/control", session, fields)

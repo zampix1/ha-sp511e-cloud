@@ -16,6 +16,7 @@ This integration is cloud dependent. It talks to the vendor cloud API used by th
 - Native `number` entities for brightness, speed, and music sensitivity.
 - `button` entities for refresh, restore standard, and all off.
 - Diagnostic sensors for current effect, color, device IP, SSID, and last command.
+- Diagnostic sensors for vendor connectivity and cloud state.
 - Config flow login with automatic session refresh.
 - Redacted diagnostics support.
 
@@ -99,15 +100,6 @@ Do not publish `.storage`, diagnostic dumps, logs, tokens, or pulled app data.
 - `fairynest_sp511e.all_off`
 - `fairynest_sp511e.refresh`
 
-Temporary aliases are also registered for users who installed version `0.1.0`:
-
-- `sp511e_cloud.set_effect`
-- `sp511e_cloud.set_speed`
-- `sp511e_cloud.set_music_sensitivity`
-- `sp511e_cloud.restore_standard`
-- `sp511e_cloud.all_off`
-- `sp511e_cloud.refresh`
-
 The Home Assistant technical domain is intentionally `fairynest_sp511e` to keep existing config entries and dashboards working. The public integration name remains `SP511E Cloud`.
 
 ## Effects
@@ -129,6 +121,7 @@ The screenshots below come from the validation Home Assistant dashboard used whi
 ## Known limitations
 
 - Cloud dependent: no local-only runtime has been confirmed.
+- Commands are rejected when the vendor cloud reports the controller offline, typically visible as `connectivity: 0`, `state: 0`, or `407 device is offline`.
 - If the vendor changes API signing, login, or command routing, the integration may need updates.
 - Only SP511E has been validated.
 - This is an unofficial integration and is not affiliated with the official app publisher, Spled, Sperll, or the device vendor.
